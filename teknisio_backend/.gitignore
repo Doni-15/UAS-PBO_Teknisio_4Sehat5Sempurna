@@ -35,3 +35,66 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.*
+!.env.example
+
+
+# Local SQL
+*.session.sql
+
+# Build output
+build/
+target/
+out/
+.gradle/
+
+# Env
+.env
+*.env
+application-local.yml
+application-local.properties
+
+# Dev
+*.txt
+*.sh
+
+# H2 local database
+data/
+*.db
+*.mv.db
+*.lock.db
+
+# Local backend database and machine files
+teknisio_backend/data/
+teknisio_backend/*.db
+teknisio_backend/*.mv.db
+teknisio_backend/*.lock.db
+teknisio_backend/local.properties
