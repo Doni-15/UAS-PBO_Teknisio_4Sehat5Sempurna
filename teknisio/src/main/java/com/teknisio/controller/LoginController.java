@@ -78,6 +78,9 @@ public class LoginController {
 
                     // Store photo and technicianProfileId from login response
                     SessionManager.setProfilePhoto(user.getProfilePhoto());
+                    if (user.getUserId() != null) {
+                        SessionManager.setUserIdString(user.getUserId());
+                    }
                     if (user.getTechnicianProfileId() != null) {
                         SessionManager.setTechnicianProfileId(user.getTechnicianProfileId());
                     }

@@ -304,8 +304,14 @@ public class ChatController implements Initializable {
             if (!exists) {
                 ChatContact active = new ChatContact(
                     contact.getName(), "", "", contact.getAvatarBase64(),
-                    contact.getStatus(), 0, true, contact.getTechnicianDto());
+                    contact.getStatus(), 0, true, contact.getTechnicianDto(),
+                    contact.getServiceRequestId());
                 SESSION_ACTIVE_CONTACTS.add(0, active);
+            }
+
+            // Pass serviceRequestId so controller can load real messages
+            if (contact.getServiceRequestId() != null) {
+                detailController.setServiceRequestId(contact.getServiceRequestId());
             }
 
             javafx.scene.Scene scene = searchField != null ? searchField.getScene() : null;
@@ -320,8 +326,7 @@ public class ChatController implements Initializable {
     private void handleBack(ActionEvent event) {
         try { Main.setRoot("/com/teknisio/fxml/home_user.fxml"); }
         catch (IOException e) { e.printStackTrace(); }
-    }
-
+    
     /**
      * Represents a chat contact (technician or active conversation).
      */
@@ -334,6 +339,7 @@ public class ChatController implements Initializable {
         private int unreadCount;
         private boolean isActiveChat;
         private TechnicianDto technicianDto;
+        private String serviceRequestId; // the service request this chat is tied to
 
         public ChatContact(String name, String lastMessage, String time, String avatarBase64,
                            String status, int unreadCount, boolean isActiveChat, TechnicianDto dto) {
@@ -347,6 +353,13 @@ public class ChatController implements Initializable {
             this.technicianDto = dto;
         }
 
+        public ChatContact(String name, String lastMessage, String time, String avatarBase64,
+                           String status, int unreadCount, boolean isActiveChat,
+                           TechnicianDto dto, String serviceRequestId) {
+            this(name, lastMessage, time, avatarBase64, status, unreadCount, isActiveChat, dto);
+            this.serviceRequestId = serviceRequestId;
+        }
+
         public String getName() { return name; }
         public String getLastMessage() { return lastMessage; }
         public void setLastMessage(String msg) { this.lastMessage = msg; }
@@ -356,5 +369,7 @@ public class ChatController implements Initializable {
         public int getUnreadCount() { return unreadCount; }
         public boolean isActiveChat() { return isActiveChat; }
         public TechnicianDto getTechnicianDto() { return technicianDto; }
+        public String getServiceRequestId() { return serviceRequestId; }
+        public void setServiceRequestId(String id) { this.serviceRequestId = id; }
     }
 }

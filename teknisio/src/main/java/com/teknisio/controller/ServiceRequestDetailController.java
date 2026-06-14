@@ -388,6 +388,7 @@ public class ServiceRequestDetailController implements Initializable {
             String techName = (currentTechnician != null && currentTechnician.getName() != null) ? currentTechnician.getName() : "Teknisi";
             String techPhoto = currentTechnician != null ? currentTechnician.getProfilePhoto() : null;
             String techStatus = "Online";
+            String serviceRequestId = currentOrder.getServiceRequestId();
 
             // Add to active conversations in ChatController if not already present
             boolean exists = ChatController.SESSION_ACTIVE_CONTACTS.stream()
@@ -395,8 +396,14 @@ public class ServiceRequestDetailController implements Initializable {
             if (!exists) {
                 ChatController.ChatContact active = new ChatController.ChatContact(
                     techName, "", "", techPhoto,
-                    techStatus, 0, true, null);
+                    techStatus, 0, true, null, serviceRequestId);
                 ChatController.SESSION_ACTIVE_CONTACTS.add(0, active);
+            } else {
+                // Update serviceRequestId on the existing contact if missing
+                ChatController.SESSION_ACTIVE_CONTACTS.stream()
+                    .filter(c -> c.getName().equals(techName))
+                    .findFirst()
+                    .ifPresent(c -> c.setServiceRequestId(serviceRequestId));
             }
 
             // Load ChatDetail FXML and set data
@@ -404,6 +411,7 @@ public class ServiceRequestDetailController implements Initializable {
             javafx.scene.Parent root = loader.load();
             ChatDetailController detailController = loader.getController();
             detailController.setContactData(techName, techPhoto, techStatus);
+            detailController.setServiceRequestId(serviceRequestId);
 
             btnOpenChat.getScene().setRoot(root);
         } catch (IOException e) {
