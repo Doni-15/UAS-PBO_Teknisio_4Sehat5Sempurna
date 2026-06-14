@@ -134,20 +134,7 @@
                               <!-- Right Badges & Checkbox -->
                               <VBox alignment="CENTER_RIGHT" spacing="22.0">
                                  <children>
-                                    <HBox alignment="CENTER_RIGHT" spacing="4.0">
-                                       <children>
-                                          <StackPane styleClass="tech-badge">
-                                             <children>
-                                                <SVGPath content="M19 19H5V5h14v14M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2" fill="#2D4B73" scaleX="0.45" scaleY="0.45" />
-                                             </children>
-                                          </StackPane>
-                                          <StackPane styleClass="tech-badge">
-                                             <children>
-                                                <SVGPath content="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 8H7V5h10v5z" fill="#2D4B73" scaleX="0.45" scaleY="0.45" />
-                                             </children>
-                                          </StackPane>
-                                       </children>
-                                    </HBox>
+                                    <HBox fx:id="badge1" alignment="CENTER_RIGHT" spacing="4.0" />
                                     <CheckBox fx:id="check1" mnemonicParsing="false" onAction="#handleCheckbox1" selected="true" styleClass="custom-checkbox" />
                                  </children>
                               </VBox>
@@ -209,15 +196,7 @@
                               <!-- Right Badges & Checkbox -->
                               <VBox alignment="CENTER_RIGHT" spacing="22.0">
                                  <children>
-                                    <HBox alignment="CENTER_RIGHT" spacing="4.0">
-                                       <children>
-                                          <StackPane styleClass="tech-badge">
-                                             <children>
-                                                <SVGPath content="M19 19H5V5h14v14M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2" fill="#2D4B73" scaleX="0.45" scaleY="0.45" />
-                                             </children>
-                                          </StackPane>
-                                       </children>
-                                    </HBox>
+                                    <HBox fx:id="badge2" alignment="CENTER_RIGHT" spacing="4.0" />
                                     <CheckBox fx:id="check2" mnemonicParsing="false" onAction="#handleCheckbox2" styleClass="custom-checkbox" />
                                  </children>
                               </VBox>
@@ -279,15 +258,7 @@
                               <!-- Right Badges & Checkbox -->
                               <VBox alignment="CENTER_RIGHT" spacing="22.0">
                                  <children>
-                                    <HBox alignment="CENTER_RIGHT" spacing="4.0">
-                                       <children>
-                                          <StackPane styleClass="tech-badge">
-                                             <children>
-                                                <SVGPath content="M19 19H5V5h14v14M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2" fill="#2D4B73" scaleX="0.45" scaleY="0.45" />
-                                             </children>
-                                          </StackPane>
-                                       </children>
-                                    </HBox>
+                                    <HBox fx:id="badge3" alignment="CENTER_RIGHT" spacing="4.0" />
                                     <CheckBox fx:id="check3" mnemonicParsing="false" onAction="#handleCheckbox3" styleClass="custom-checkbox" />
                                  </children>
                               </VBox>
@@ -349,15 +320,7 @@
                               <!-- Right Badges & Checkbox -->
                               <VBox alignment="CENTER_RIGHT" spacing="22.0">
                                  <children>
-                                    <HBox alignment="CENTER_RIGHT" spacing="4.0">
-                                       <children>
-                                          <StackPane styleClass="tech-badge">
-                                             <children>
-                                                <SVGPath content="M19 19H5V5h14v14M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2" fill="#2D4B73" scaleX="0.45" scaleY="0.45" />
-                                             </children>
-                                          </StackPane>
-                                       </children>
-                                    </HBox>
+                                    <HBox fx:id="badge4" alignment="CENTER_RIGHT" spacing="4.0" />
                                     <CheckBox fx:id="check4" mnemonicParsing="false" onAction="#handleCheckbox4" styleClass="custom-checkbox" />
                                  </children>
                               </VBox>

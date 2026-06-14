@@ -72,6 +72,11 @@ public class TechnicianListController implements Initializable {
     @FXML private Label tech3Price;
     @FXML private Label tech4Price;
 
+    @FXML private HBox badge1;
+    @FXML private HBox badge2;
+    @FXML private HBox badge3;
+    @FXML private HBox badge4;
+
     // -- Overlay & category selector --
     @FXML private VBox floatingOverlay;
     @FXML private Label sliderLabel;
@@ -85,6 +90,7 @@ public class TechnicianListController implements Initializable {
     private CheckBox[] checkboxes;
     private Label[] nameLabels;
     private Label[] priceLabels;
+    private HBox[] badges;
 
     private List<TechnicianDto> currentTechnicians = new ArrayList<>();
     private List<DeviceCategoryDto> allCategories = new ArrayList<>();
@@ -98,6 +104,7 @@ public class TechnicianListController implements Initializable {
         checkboxes = new CheckBox[]{check1, check2, check3, check4};
         nameLabels = new Label[]{tech1Name, tech2Name, tech3Name, tech4Name};
         priceLabels = new Label[]{tech1Price, tech2Price, tech3Price, tech4Price};
+        badges = new HBox[]{badge1, badge2, badge3, badge4};
 
         applyAvatarClips();
         hideAllCards();
@@ -303,6 +310,9 @@ public class TechnicianListController implements Initializable {
                 }
 
                 populateStars(ratings[i], (int) Math.round(tech.getRatingDouble()));
+
+                // Fill badge icons with PNG images like home_user
+                if (badges[i] != null) populateBadges(badges[i], tech);
             } else {
                 cards[i].setVisible(false);
                 cards[i].setManaged(false);
@@ -324,6 +334,33 @@ public class TechnicianListController implements Initializable {
             return tech.getSupportedDeviceCategories().get(0).getName() + " Specialist";
         }
         return "General Specialist";
+    }
+
+    private void populateBadges(HBox container, TechnicianDto tech) {
+        container.getChildren().clear();
+        if (tech.getSupportedDeviceCategories() == null) return;
+        int count = 0;
+        for (DeviceCategoryDto cat : tech.getSupportedDeviceCategories()) {
+            if (count >= 3) break;
+            StackPane badge = new StackPane();
+            badge.getStyleClass().add("tech-badge");
+            badge.setMinSize(20, 20);
+            badge.setMaxSize(20, 20);
+            badge.setAlignment(Pos.CENTER);
+
+            ImageView icon = new ImageView();
+            icon.setFitWidth(13);
+            icon.setFitHeight(13);
+            icon.setPreserveRatio(true);
+            try {
+                String path = getCategoryIconPath(cat.getName());
+                icon.setImage(new Image(getClass().getResource(path).toExternalForm()));
+            } catch (Exception ignored) {}
+
+            badge.getChildren().add(icon);
+            container.getChildren().add(badge);
+            count++;
+        }
     }
 
     private void applyAvatarClips() {
