@@ -37,17 +37,11 @@ public class GeoLocationUtil {
      * Fetches current location details based on client public IP.
      */
     public static LocationResult fetchLocation() {
-        // Try https://ipapi.co/json/ first
         LocationResult res = fetchFromIpapi();
         if (res != null) {
             return res;
         }
-        // Fallback to http://ip-api.com/json/
-        res = fetchFromIpApiOrg();
-        if (res != null) {
-            return res;
-        }
-        // Return default fallback if both fail
+        // Fail safely to the local placeholder; never downgrade to cleartext HTTP.
         return new LocationResult();
     }
 
@@ -78,39 +72,6 @@ public class GeoLocationUtil {
             }
         } catch (Exception e) {
             System.err.println("[GeoLocationUtil] Failed to fetch from ipapi.co: " + e.getMessage());
-        }
-        return null;
-    }
-
-    private static LocationResult fetchFromIpApiOrg() {
-        try {
-            URL url = new URL("http://ip-api.com/json/");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setConnectTimeout(4000);
-            conn.setReadTimeout(4000);
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-            if (conn.getResponseCode() == 200) {
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        sb.append(line);
-                    }
-                    JsonObject json = JsonParser.parseString(sb.toString()).getAsJsonObject();
-                    if (json.has("status") && "success".equals(json.get("status").getAsString())) {
-                        double lat = json.has("lat") ? json.get("lat").getAsDouble() : -6.2088;
-                        double lon = json.has("lon") ? json.get("lon").getAsDouble() : 106.8456;
-                        String city = json.has("city") && !json.get("city").isJsonNull() ? json.get("city").getAsString() : "Medan";
-                        String region = json.has("regionName") && !json.get("regionName").isJsonNull() ? json.get("regionName").getAsString() : "North Sumatra";
-                        String country = json.has("country") && !json.get("country").isJsonNull() ? json.get("country").getAsString() : "Indonesia";
-                        return new LocationResult(lat, lon, city, region, country);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("[GeoLocationUtil] Failed to fetch from ip-api.com: " + e.getMessage());
         }
         return null;
     }
