@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -44,10 +45,12 @@ public class SecurityConfig {
   private String allowedOrigins;
 
   @Bean
+  @Order(2)
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
-      .csrf(AbstractHttpConfigurer::disable)
-      .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
+      // REST endpoints use bearer tokens and do not rely on browser cookies.
+      // Non-API routes keep Spring Security's normal CSRF protection.
+      .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .exceptionHandling(exception -> exception
@@ -58,8 +61,6 @@ public class SecurityConfig {
       .authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
         .requestMatchers(HttpMethod.GET, "/actuator/info").permitAll()
-        .requestMatchers("/h2-console/**").permitAll()
-
         .requestMatchers(HttpMethod.POST, "/api/auth/register/customer").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/auth/register/technician").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()

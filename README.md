@@ -1,110 +1,111 @@
-# Teknisio - Platform Layanan Perbaikan Elektronik
-Kelompok: 4 Sehat 5 Sempurna
-Anggota:
-Rifki Al Sauqy (241401007)
+# Teknisio — Aplikasi Desktop Layanan Perbaikan Elektronik
 
-Doni Rivaldo Simamora (241401037)
+Teknisio adalah project UAS Pemrograman Berbasis Objek yang menggabungkan klien desktop JavaFX dan REST API Spring Boot. Aplikasi ini memodelkan alur pemesanan servis elektronik antara pelanggan dan teknisi, mulai dari autentikasi hingga penyelesaian permintaan layanan.
 
-Rionaldo Benedictus Purba (241401064)
+Project ini dibuat secara berkelompok oleh:
 
-Yehezkiel Gustav Setiawan Sitanggang (241401070)
+- Rifki Al Sauqy
+- Doni Rivaldo Simamora
+- Rionaldo Benedictus Purba
+- Yehezkiel Gustav Setiawan Sitanggang
+- M. Farhan Prasetyo
 
-M.Farhan Prasetyo (241401094)
+Repository ini merupakan coursework dan snapshot pengembangan, bukan layanan production.
 
-**Teknisio** adalah aplikasi berbasis Java (JavaFX untuk klien Desktop dan Spring Boot untuk Backend) yang menghubungkan pelanggan dengan teknisi perbaikan alat elektronik rumah tangga terdekat. Aplikasi ini dikembangkan untuk meningkatkan **produktivitas dan efisiensi waktu** melalui otomatisasi koordinasi alur kerja servis, pelacakan perjalanan teknisi secara instan, serta integrasi komunikasi langsung di dalam satu sistem terpadu.
+## Fitur yang Tersedia
 
----
+- Registrasi dan login untuk peran pelanggan dan teknisi.
+- Otorisasi endpoint menggunakan Spring Security, JWT, dan role-based access control.
+- Pengelolaan kategori perangkat dan keahlian teknisi.
+- Siklus permintaan servis: dibuat, diterima/ditolak, dimulai, dan diselesaikan.
+- Riwayat status, ulasan, chat, dan pembuatan nota teks.
+- Klien JavaFX dengan pencarian, sorting, dan tampilan pelacakan lokasi.
+- Migrasi database menggunakan Flyway.
 
-## Fitur-Fitur Utama
+## Teknologi
 
-1. **Autentikasi Akun Multi-Peran (Role-Based Access):**
-   * Pembedaan akses antara **Pelanggan** (*Customer*) dan **Teknisi** (*Technician*).
-   * Pengamanan password menggunakan enkripsi BCrypt dan otorisasi berbasis JWT token.
-2. **Manajemen Pemesanan Servis (Service Request Lifecycle):**
-   * Pelanggan dapat membuat pemesanan perbaikan dengan memilih kategori perangkat (seperti AC, Kulkas, Mesin Cuci, dll.), mengisi deskripsi kerusakan, dan menugaskan teknisi.
-   * Teknisi dapat menerima (*accept*), menolak (*reject*), memulai (*start*), dan menyelesaikan (*complete*) permintaan servis.
-   * Riwayat status direkam secara dinamis menggunakan trigger database H2.
-3. **Pelacakan Lokasi GPS Real-Time (GPS Tracking):**
-   * Pemantauan lokasi pergerakan teknisi di peta interaktif Leaflet.js melalui komponen JavaFX WebView.
-   * Mendukung koneksi serial port (COM Port) menggunakan pustaka `jSerialComm` untuk membaca dan mengurai koordinat dari modul GPS fisik (NMEA `$GPRMC`/`$GPGGA` sentences).
-   * Dilengkapi fitur simulasi klik pada peta untuk mempermudah penyesuaian titik posisi tanpa hardware.
-4. **Chat Terintegrasi (In-App Chat):**
-   * Saluran komunikasi teks langsung antara pelanggan dan teknisi yang aktif otomatis saat status servis berada pada fase pengerjaan (`ACCEPTED` atau `ON_PROGRESS`).
-5. **Kalkulasi Bisnis Dinamis:**
-   * Perhitungan estimasi biaya awal dan total biaya akhir perbaikan berdasarkan kategori alat secara otomatis.
-6. **Nota Digital Otomatis (File I/O):**
-   * Pembuatan berkas bukti transaksi pengerjaan berformat `.txt` secara otomatis setelah pesanan selesai pengerjaan.
-7. **Portal Informasi & Tips (News Feed):**
-   * Menyediakan kumpulan artikel informatif seputar tips perawatan mandiri barang elektronik.
-8. **Live Search & Sorting Tabel:**
-   * Penyaringan dan pencarian data riwayat pemesanan secara instan pada komponen TableView.
+| Bagian | Teknologi |
+| --- | --- |
+| Desktop | Java 17, JavaFX 22, Maven, Gson |
+| Backend | Java 17, Spring Boot 3.5, Gradle |
+| Security | Spring Security, BCrypt, JWT |
+| Database | H2 file-based, Flyway |
+| Realtime | Spring WebSocket |
 
----
+## Struktur Repository
 
-## Kebutuhan Sistem & Dependencies
+```text
+teknisio/           klien desktop JavaFX
+teknisio_backend/   REST API Spring Boot
+teknisio_document/  dokumentasi dan rancangan database
+```
 
-### Prerequisites
-* **Java Development Kit (JDK) 17** atau versi lebih baru.
-* **Apache Maven** (untuk manajemen modul Klien Desktop).
-* **Gradle** (untuk manajemen modul Backend Spring Boot).
+## Menjalankan Backend
 
-### Dependencies Klien Desktop (`teknisio/pom.xml`)
-* JavaFX (Controls, FXML, Web) v22.
-* GSON (Google Code Gson) v2.11.0 untuk serialisasi JSON.
-* jSerialComm v2.10.4 untuk komunikasi serial port GPS.
+Persyaratan: JDK 17. Gradle Wrapper sudah tersedia.
 
-### Dependencies Backend (`teknisio_backend/build.gradle.kts`)
-* Spring Boot Starter (Web, Security, Validation, Actuator, WebSocket).
-* H2 Database (File-based local database).
-* Flyway Core untuk migrasi skema database.
-* JSON Web Token (JJWT Api, Impl, Jackson) v0.12.6.
-* Lombok.
+1. Masuk ke direktori backend dan buat konfigurasi lokal:
 
----
-
-## Cara Menjalankan Aplikasi
-
-### 1. Menjalankan Backend (`teknisio_backend`)
-Backend bertindak sebagai penyedia REST API dan database engine lokal menggunakan H2.
-
-1. Buka terminal pada direktori `teknisio_backend`.
-2. Duplikat file konfigurasi `.env.example` menjadi `.env` dan sesuaikan parameter koneksi database H2 lokal (opsional, default sudah terkonfigurasi dengan aman):
-   ```properties
-   H2_URL=jdbc:h2:file:./data/teknisio_db
-   H2_USER=sa
-   H2_PASSWORD=
-   JWT_SECRET=your_jwt_secret_key_here
-   ```
-3. Jalankan server Spring Boot menggunakan Gradle:
-   * **Windows:**
-     ```bash
-     .\gradlew.bat bootRun
-     ```
-   * **Linux/macOS:**
-     ```bash
-     ./gradlew bootRun
-     ```
-4. Server backend akan aktif di port `http://localhost:8080`. Flyway akan otomatis membuat berkas database H2 di folder `./data/` dan menjalankan migrasi skema database `V1` s.d `V6`.
-
-### 2. Menjalankan Klien Desktop (`teknisio`)
-Aplikasi Klien Desktop dikembangkan dengan JavaFX dan berinteraksi langsung ke REST API Backend.
-
-1. Buka terminal baru pada direktori `teknisio`.
-2. Bersihkan dan unduh seluruh dependencies melalui Maven:
    ```bash
-   mvn clean compile
+   cd teknisio_backend
+   cp .env.example .env
    ```
-3. Jalankan aplikasi klien JavaFX:
+
+2. Isi `JWT_SECRET` dengan nilai acak minimal 32 byte. Jangan commit `.env`.
+
+3. Jalankan backend dengan konfigurasi default:
+
    ```bash
-   mvn javafx:run
+   ./gradlew bootRun
    ```
-4. Jendela aplikasi Teknisio akan muncul dan siap digunakan untuk registrasi, login, pemesanan, chat, hingga tracking GPS.
 
----
+Konfigurasi default menonaktifkan H2 Console dan tidak memberikan akses publik ke `/h2-console/**`.
 
-## Video Presentasi Aplikasi
+### H2 Console untuk Development
 
-[![Video Presentasi Teknisio](https://img.youtube.com/vi/-QjFn0lsS0U/0.jpg)](https://youtu.be/-QjFn0lsS0U?si=qLF7VqJFPzYBQMLa)
+Console hanya tersedia melalui profile `development`:
 
+```bash
+SPRING_PROFILES_ACTIVE=development ./gradlew bootRun
+```
 
-https://youtu.be/-QjFn0lsS0U?si=qLF7VqJFPzYBQMLa
+Profile tersebut mengikat aplikasi ke `127.0.0.1`, mempertahankan `web-allow-others=false`, dan membuka console lokal di `http://127.0.0.1:8080/h2-console`. Jangan aktifkan profile ini pada deployment yang dapat diakses jaringan.
+
+## Menjalankan Klien Desktop
+
+Persyaratan: JDK 17 dan Maven.
+
+```bash
+cd teknisio
+mvn clean compile
+mvn javafx:run
+```
+
+Backend perlu aktif agar fitur yang memakai REST API dapat digunakan. Pencarian lokasi berbasis IP dan geocoding hanya memakai endpoint HTTPS; jika provider tidak tersedia aplikasi menggunakan nilai lokal pengganti tanpa menurunkan koneksi ke HTTP.
+
+## Pengujian
+
+Backend:
+
+```bash
+cd teknisio_backend
+./gradlew test
+```
+
+Klien desktop belum memiliki automated test suite. Kompilasi dapat diverifikasi dengan:
+
+```bash
+cd teknisio
+mvn clean compile
+```
+
+## Catatan Keamanan
+
+- JWT secret wajib disediakan saat runtime dan tidak memiliki fallback source-controlled.
+- H2 Console nonaktif pada profile default; pengecualian development dibatasi ke loopback.
+- API memakai bearer token dan tidak bergantung pada session cookie. CSRF hanya diabaikan untuk path REST `/api/**`, bukan dinonaktifkan global untuk console.
+- File `.env`, database lokal, build output, dan state IDE tidak seharusnya masuk version control.
+
+## Status Project
+
+Project mata kuliah telah mencapai alur utama yang dapat didemonstrasikan. Pengembangan berikutnya sebaiknya berfokus pada penambahan automated test dan penyederhanaan dokumentasi internal.
